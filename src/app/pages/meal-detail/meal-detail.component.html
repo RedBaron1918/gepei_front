@@ -1,0 +1,64 @@
+<div class="meal-detail-wrapper">
+    <div *ngIf="loading()" class="loading">
+      Loading meal details...
+    </div>
+  
+    <div *ngIf="!loading() && meal()" class="meal-detail-content">
+      <header class="meal-header">
+        <div class="meal-image-container">
+          <img [src]="meal()?.strMealThumb" [alt]="meal()?.strMeal" class="meal-image" />
+        </div>
+        
+        <div class="meal-info">
+          <h1>{{ meal()?.strMeal }}</h1>
+          <div class="meal-metadata">
+            <span class="tag">{{ meal()?.strCategory }}</span>
+            <span class="tag">{{ meal()?.strArea }}</span>
+            <span *ngIf="meal()?.strTags" class="tag">
+              {{ meal()?.strTags }}
+            </span>
+          </div>
+        </div>
+      </header>
+  
+      <div class="meal-content">
+        <section class="ingredients-section">
+          <h2>Ingredients</h2>
+          <ul class="ingredients-list">
+            <li *ngFor="let ingredient of ingredients()" class="ingredient-item">
+              <span class="ingredient-measure">{{ ingredient.measure }}</span>
+              <span class="ingredient-name">{{ ingredient.name }}</span>
+            </li>
+          </ul>
+        </section>
+  
+        <section class="instructions-section">
+          <h2>Instructions</h2>
+          <div class="instructions">
+            <p *ngFor="let instruction of meal()?.strInstructions?.split('\n')">
+              {{ instruction }}
+            </p>
+          </div>
+        </section>
+  
+        <section *ngIf="youtubeUrl()" class="video-section">
+          <h2>Video Tutorial</h2>
+          <div class="video-container">
+            <iframe
+              [src]="youtubeUrl()"
+              frameborder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowfullscreen
+            ></iframe>
+          </div>
+        </section>
+  
+        <section *ngIf="meal()?.strSource" class="source-section">
+          <h2>Source</h2>
+          <a [href]="meal()?.strSource" target="_blank" rel="noopener noreferrer" class="source-link">
+            Original Recipe
+          </a>
+        </section>
+      </div>
+    </div>
+  </div>

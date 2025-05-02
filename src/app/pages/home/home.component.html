@@ -1,0 +1,57 @@
+<div class="wrapper">
+  <section class="featured-meal" *ngIf="!mealsLoading() && meals().length > 0">
+    <div class="featured-image-container">
+      <img [src]="meals()[0].strMealThumb" [alt]="meals()[0].strMeal" class="featured-image" />
+      <div class="featured-overlay">
+        <div class="featured-content">
+          <span class="featured-badge">85% of people would make this again</span>
+          <h2 class="featured-title">{{ meals()[0].strMeal }}</h2>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="categories-section">
+    <h3>Popular Categories</h3>
+    <swiper-container
+      class="categories-container"
+      *ngIf="!loading()"
+      freeMode="true"
+      [slidesPerView]="4"
+      [spaceBetween]="20"
+      navigation="true"
+      [breakpoints]="generalBreakpoints">
+      <swiper-slide *ngFor="let category of categories()">
+        <a
+          class="category-item"
+          (click)="fetchMealsByCategory(category.strCategory)">
+          <div class="image-container">
+            <img
+              [src]="category.strCategoryThumb"
+              [alt]="category.strCategory"
+              class="category-image"
+            />
+          </div>
+          <p class="category-title">{{ category.strCategory }}</p>
+        </a>
+      </swiper-slide>
+    </swiper-container>
+    <div *ngIf="loading()" class="loading">Loading categories...</div>
+  </section>
+
+  <section class="meals-section">
+    <h3>Meals in {{ categoryString() }}</h3>
+    <div *ngIf="mealsLoading()" class="loading">Loading meals...</div>
+    <div class="meals-grid" *ngIf="!mealsLoading() && meals().length > 0">
+      <div *ngFor="let meal of meals()" class="meal-card">
+        <a [routerLink]="['/meal', meal.idMeal]">
+          <img [src]="meal.strMealThumb" [alt]="meal.strMeal" class="meal-image" />
+          <h4 class="meal-title">{{ meal.strMeal }}</h4>
+        </a>
+      </div>
+    </div>
+    <div *ngIf="!mealsLoading() && meals().length === 0" class="no-meals">
+      No meals found for this category
+    </div>
+  </section>
+</div>

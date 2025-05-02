@@ -1,0 +1,24 @@
+.nav-buttons{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  }
+  
+  .nav-button{
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
+    margin: 0px 10px;
+    font-size: 15px;
+  }
+  .flex-row{
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+  }
+
+  footer{
+    padding: 40px;
+    background-color: rgba(245, 245, 245, 0.651);
+    width:100%;
+  }

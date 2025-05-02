@@ -1,0 +1,45 @@
+ <nav class="nav">
+      <div class="nav-brand">
+        <button class="menu-toggle" (click)="toggleMenu()" *ngIf="isMobile()">
+          <mat-icon>menu</mat-icon>
+        </button>
+        <img src="assets/Logo.svg" alt="Logo" class="logo">
+      </div>
+
+      <div class="nav-links" [class.active]="isMenuOpen()">
+        <button class="nav-button" routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
+          Home
+        </button>
+        <button class="nav-button" routerLink="/about" routerLinkActive="active">
+          About
+        </button>
+        <button class="nav-button" routerLink="/contact" routerLinkActive="active">
+          Contact
+        </button>
+      </div>
+
+      <div class="nav-buttons">
+        <app-material-button
+          text="Search"
+          type="icon"
+          icon="search"
+          (onClick)="openDialog()">
+        </app-material-button>
+      
+        <ng-container *ngIf="authService.user(); else loginButton">
+          <span>Welcome, {{ authService.user()?.name }}!</span>
+          <app-material-button
+            text="Logout"
+            (onClick)="authService.logout()">
+          </app-material-button>
+        </ng-container>
+      
+        <ng-template #loginButton>
+          <app-material-button
+            text="Login"
+            routerLink="/auth">
+          </app-material-button>
+        </ng-template>
+      </div>
+      
+    </nav>
