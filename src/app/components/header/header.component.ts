@@ -11,10 +11,11 @@ import {
 } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { MaterialButtonComponent } from '../material-button/material-button.component';
-import { RouterLink, RouterLinkActive } from '@angular/router';
+import { Route, RouterLink, RouterLinkActive } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { SearchDialogComponent } from '../search-dialog/search-dialog.component';
 import { AuthService } from '../../services/auth.service';
+import { Router } from 'express';
 interface User {
   id: number;
   name: string;
@@ -73,6 +74,8 @@ export class HeaderComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe((result) => {});
   }
+
+
 
   ngOnDestroy() {
     if (isPlatformBrowser(this.platformId)) {

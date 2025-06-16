@@ -76,15 +76,15 @@ export class SearchDialogComponent {
   selectMeal(meal: Meal) {
     console.log('Selected meal:', meal);
     this.dialogRef.close();
-    void this.router.navigate(['/meal', meal.idMeal]);
+    void this.router.navigate(['/meal', meal.id]);
   }
 
   close() {
     this.dialogRef.close();
   }
 
-  trackByMeal(index: number, meal: Meal): string {
-    return meal.idMeal;
+  trackByMeal(index: number, meal: Meal): number {
+    return meal.id;
   }
 
   handleImageError(event: Event) {

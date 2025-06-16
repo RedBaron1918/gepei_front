@@ -35,47 +35,46 @@ export class MealDetailComponent implements OnInit {
   ingredients: WritableSignal<Ingredient[]> = signal([]);
   youtubeUrl: WritableSignal<SafeResourceUrl | null> = signal(null);
 
-  ngOnInit(): void {
+ ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {
       this.fetchMealDetails(id);
     }
   }
-
-  private fetchMealDetails(id: string): void {
-    this.loading.set(true);
-    this.mealService.getMealDetails(id).subscribe({
-      next: (response) => {
-        const mealData = response.meals[0];
-        this.meal.set(mealData);
-        this.extractIngredients(mealData);
-        if (mealData.strYoutube) {
-          this.setYoutubeUrl(mealData.strYoutube);
-        }
-        this.loading.set(false);
-      },
-      error: (error) => {
-        console.error('Error fetching meal details:', error);
-        this.loading.set(false);
-      },
-    });
-  }
-
-  private extractIngredients(meal: Meal): void {
-    const ingredients: Ingredient[] = [];
-    for (let i = 1; i <= 20; i++) {
-      const ingredient = meal[`strIngredient${i}` as keyof Meal] as string;
-      const measure = meal[`strMeasure${i}` as keyof Meal] as string;
-
-      if (ingredient?.trim() && measure?.trim()) {
-        ingredients.push({
-          name: ingredient.trim(),
-          measure: measure.trim(),
-        });
+private fetchMealDetails(id: string): void {
+  this.loading.set(true);
+  this.mealService.getMealDetails(id).subscribe({
+    next: (mealData) => {
+      console.log('Meal from backend:', mealData);
+      this.meal.set(mealData);
+this.extractIngredients(mealData);
+      if (mealData.strYoutube) {
+        this.setYoutubeUrl(mealData.strYoutube);
       }
+
+      this.loading.set(false);
+    },
+    error: (error) => {
+      console.error('Error fetching meal details:', error);
+      this.loading.set(false);
+    },
+  });
+  
+}
+private extractIngredients(meal: Meal): void {
+  const ingredients: Ingredient[] = [];
+
+  for (let i = 0; i < meal.ingredients.length; i++) {
+    const name = meal.ingredients[i];
+    const measure = meal.measures[i] || '';
+    if (name?.trim()) {
+      ingredients.push({ name: name.trim(), measure: measure.trim() });
     }
-    this.ingredients.set(ingredients);
   }
+
+  this.ingredients.set(ingredients);
+}
+
 
   private setYoutubeUrl(url: string): void {
     const videoId = url.split('v=')[1];

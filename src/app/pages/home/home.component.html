@@ -11,40 +11,12 @@
     </div>
   </section>
 
-  <section class="categories-section">
-    <h3>Popular Categories</h3>
-    <swiper-container
-      class="categories-container"
-      *ngIf="!loading()"
-      freeMode="true"
-      [slidesPerView]="4"
-      [spaceBetween]="20"
-      navigation="true"
-      [breakpoints]="generalBreakpoints">
-      <swiper-slide *ngFor="let category of categories()">
-        <a
-          class="category-item"
-          (click)="fetchMealsByCategory(category.strCategory)">
-          <div class="image-container">
-            <img
-              [src]="category.strCategoryThumb"
-              [alt]="category.strCategory"
-              class="category-image"
-            />
-          </div>
-          <p class="category-title">{{ category.strCategory }}</p>
-        </a>
-      </swiper-slide>
-    </swiper-container>
-    <div *ngIf="loading()" class="loading">Loading categories...</div>
-  </section>
 
   <section class="meals-section">
-    <h3>Meals in {{ categoryString() }}</h3>
     <div *ngIf="mealsLoading()" class="loading">Loading meals...</div>
     <div class="meals-grid" *ngIf="!mealsLoading() && meals().length > 0">
       <div *ngFor="let meal of meals()" class="meal-card">
-        <a [routerLink]="['/meal', meal.idMeal]">
+        <a [routerLink]="['/meal', meal.id]">
           <img [src]="meal.strMealThumb" [alt]="meal.strMeal" class="meal-image" />
           <h4 class="meal-title">{{ meal.strMeal }}</h4>
         </a>

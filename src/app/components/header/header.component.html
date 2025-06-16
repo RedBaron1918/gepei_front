@@ -25,6 +25,11 @@
           icon="search"
           (onClick)="openDialog()">
         </app-material-button>
+
+          <app-material-button
+            text="form"
+            routerLink="/create">
+          </app-material-button>
       
         <ng-container *ngIf="authService.user(); else loginButton">
           <span>Welcome, {{ authService.user()?.name }}!</span>

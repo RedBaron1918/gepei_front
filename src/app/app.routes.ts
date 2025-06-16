@@ -13,6 +13,11 @@ export const routes: Routes = [
         (m) => m.MealDetailComponent
       ),
   },
+   {
+    path: 'create',
+    loadComponent: () =>
+      import('./pages/meal-form/meal-form.component').then((m) => m.MealFormComponent),
+  },
   {
     path: 'about',
     loadComponent: () =>

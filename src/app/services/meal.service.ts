@@ -8,25 +8,25 @@ import { Meal, Meals } from '../models/meal';
 })
 export class MealService {
   http: HttpClient = inject(HttpClient);
-  url: string = 'https://www.themealdb.com/api/json/v1/1';
+  url: string = 'http://127.0.0.1:8000/api';
+
   private searchResultsSubject = new BehaviorSubject<Meal[]>([]);
   searchResults$ = this.searchResultsSubject.asObservable();
 
-  mealListByCategory(category: string): Observable<Meals> {
-    console.log(`this is category String : ${category}`);
-    return this.http.get<Meals>(`${this.url}/filter.php?c=${category}`);
+  mealListByCategory(): Observable<Meals> {
+    return this.http.get<Meals>(`${this.url}/meals`);
   }
-  getMealDetails(id: string): Observable<Meals> {
-    return this.http.get<Meals>(`${this.url}/lookup.php?i=${id}`);
+
+  getMealDetails(id: string): Observable<Meal> {
+    return this.http.get<Meal>(`${this.url}/meals/${id}`);
   }
+
+  createMeal(meal: Meal): Observable<any> {
+    return this.http.post(`${this.url}/meals`, meal);
+  }
+
   searchMeals(query: string): Observable<Meal[]> {
     return this.http
-      .get<{ meals: Meal[] }>(`${this.url}/search.php?s=${query}`)
-      .pipe(
-        map((response) => {
-          console.log('Raw API response:', response);
-          return response.meals || [];
-        })
-      );
-  }
-}
+      .get<{ meals: Meal[] }>(`${this.url}/meals/search?q=${query}`)
+      .pipe(map((res) => res.meals || []));
+  }}

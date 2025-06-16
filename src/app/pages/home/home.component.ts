@@ -10,7 +10,6 @@ import {
   ViewChild,
 } from '@angular/core';
 import { CategoryService } from '../../services/category.service';
-import { Categories, Category } from '../../models/category';
 import { RouterLink } from '@angular/router';
 import { Meal, Meals } from '../../models/meal';
 import { MealService } from '../../services/meal.service';
@@ -29,8 +28,6 @@ export class HomeComponent implements OnInit {
   mealService: MealService = inject(MealService);
 
   loading: WritableSignal<boolean> = signal(false);
-  categories: WritableSignal<Category[]> = signal([]);
-  categoryString: WritableSignal<string> = signal('');
   meals: WritableSignal<Meal[]> = signal([]);
   mealsLoading: WritableSignal<boolean> = signal(false);
 
@@ -49,11 +46,8 @@ export class HomeComponent implements OnInit {
 
     this.categoryService.categoryList().subscribe({
       next: (data) => {
-        this.categories.set(data.categories);
-        this.categoryString.set(data.categories[0].strCategory);
         this.loading.set(false);
-
-        this.fetchMealsByCategory(this.categoryString());
+        this.fetchMealsByCategory();
       },
       error: (error) => {
         console.error('Error fetching categories:', error);
@@ -62,11 +56,11 @@ export class HomeComponent implements OnInit {
     });
   }
 
-  fetchMealsByCategory(category: string): void {
+  fetchMealsByCategory(): void {
     this.mealsLoading.set(true);
-    this.categoryString.set(category);
-    this.mealService.mealListByCategory(category).subscribe({
+    this.mealService.mealListByCategory().subscribe({
       next: (data) => {
+        console.log(data);
         this.meals.set(data.meals);
         this.mealsLoading.set(false);
       },
