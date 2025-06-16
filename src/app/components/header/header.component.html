@@ -25,18 +25,22 @@
           icon="search"
           (onClick)="openDialog()">
         </app-material-button>
+          
 
+        <ng-container *ngIf="authService.user(); ">
           <app-material-button
-            text="form"
+            text="Post Meal"
             routerLink="/create">
           </app-material-button>
+        </ng-container>
       
         <ng-container *ngIf="authService.user(); else loginButton">
-          <span>Welcome, {{ authService.user()?.name }}!</span>
+         
           <app-material-button
             text="Logout"
             (onClick)="authService.logout()">
           </app-material-button>
+           <span>Welcome, {{ authService.user()?.name }}!</span>
         </ng-container>
       
         <ng-template #loginButton>

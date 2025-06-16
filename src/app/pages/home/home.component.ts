@@ -24,10 +24,8 @@ import { MealService } from '../../services/meal.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HomeComponent implements OnInit {
-  categoryService: CategoryService = inject(CategoryService);
   mealService: MealService = inject(MealService);
 
-  loading: WritableSignal<boolean> = signal(false);
   meals: WritableSignal<Meal[]> = signal([]);
   mealsLoading: WritableSignal<boolean> = signal(false);
 
@@ -41,19 +39,7 @@ export class HomeComponent implements OnInit {
   };
 
   ngOnInit(): void {
-    this.loading.set(true);
-    this.mealsLoading.set(true);
-
-    this.categoryService.categoryList().subscribe({
-      next: (data) => {
-        this.loading.set(false);
-        this.fetchMealsByCategory();
-      },
-      error: (error) => {
-        console.error('Error fetching categories:', error);
-        this.loading.set(false);
-      },
-    });
+   this.fetchMealsByCategory();
   }
 
   fetchMealsByCategory(): void {

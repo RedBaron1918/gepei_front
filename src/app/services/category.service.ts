@@ -7,10 +7,10 @@ import { Categories, Category } from '../models/category';
   providedIn: 'root',
 })
 export class CategoryService {
-  private ApiUrl = 'https://www.themealdb.com/api/json/v1/1/categories.php';
+  private apiUrl = 'http://127.0.0.1:8000/categories';
   private http: HttpClient = inject(HttpClient);
 
-  categoryList(): Observable<Categories> {
-    return this.http.get<Categories>(this.ApiUrl);
+ getCategories(): Observable<Category[]> {
+    return this.http.get<Category[]>('http://127.0.0.1:8000/api/categories');
   }
 }

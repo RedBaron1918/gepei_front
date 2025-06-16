@@ -1,14 +1,16 @@
- .nav {
-      background-color: rgba(245, 245, 245, 0.95);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 16px 40px;
-      position: sticky;
-      top: 0;
-      z-index: 1000;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    }
+.nav {
+  background-color: rgba(245, 245, 245, 0.95);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 40px;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  position: relative; 
+}
+
 
     .nav-brand {
       display: flex;
@@ -28,10 +30,14 @@
       padding: 8px;
     }
 
-    .nav-links {
-      display: flex;
-      gap: 20px;
-    }
+.nav-links {
+  display: flex;
+  gap: 20px;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
 
     .nav-button {
       border: none;
@@ -73,14 +79,15 @@
 
       .nav-links {
         display: none;
-        position: absolute;
-        top: 100%;
-        left: 0;
-        right: 0;
-        flex-direction: column;
-        background-color: rgba(245, 245, 245, 0.95);
-        padding: 16px;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    transform: none; /* reset transform if needed */
+    flex-direction: column;
+    background-color: rgba(245, 245, 245, 0.95);
+    padding: 16px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
       }
 
       .nav-links.active {

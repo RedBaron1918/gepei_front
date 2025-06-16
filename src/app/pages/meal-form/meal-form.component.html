@@ -1,18 +1,59 @@
-
-<h1>hallo</h1><form (ngSubmit)="submit()">
-  <label>Meal Name:
+<form [formGroup]="mealForm" (ngSubmit)="submit()">
+  <label>
+    Meal Name:
     <input formControlName="strMeal" />
   </label>
 
-  <label>Category ID:
-    <input formControlName="category_id" type="number" />
+  <label>
+    Category:
+    <select formControlName="strCategory">
+      <option value="" disabled>Select category</option>
+      <option *ngFor="let category of categories" [value]="category.strCategory">
+        {{ category.strCategory }}
+      </option>
+    </select>
   </label>
 
-  <label>Area:
+  <label>
+    Area:
     <input formControlName="strArea" />
   </label>
 
-  <!-- Add more fields as needed -->
+  <label>
+    Instructions:
+    <textarea formControlName="strInstructions"></textarea>
+  </label>
+
+  <label>
+    Image URL:
+    <input formControlName="strMealThumb" />
+  </label>
+
+  <label>
+    Tags (comma separated):
+    <input formControlName="strTags" />
+  </label>
+
+  <label>
+    YouTube URL:
+    <input formControlName="strYoutube" />
+  </label>
+
+  <label>
+    Source:
+    <input formControlName="strSource" />
+  </label>
+
+  <h3>Ingredients & Measures</h3>
+  <div formArrayName="ingredients">
+    <div *ngFor="let ingredient of ingredients.controls; let i = index">
+      <input [formControlName]="i" placeholder="Ingredient" />
+      <input [formControl]="getMeasureControl(i)" placeholder="Measure" />
+      <button type="button" (click)="removeIngredient(i)">Remove</button>
+    </div>
+  </div>
+
+  <button type="button" (click)="addIngredient()">Add Ingredient</button>
 
   <button type="submit">Create Meal</button>
 </form>
