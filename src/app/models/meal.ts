@@ -9,10 +9,10 @@ export interface Meal {
   strArea?: string;
   strInstructions?: string;
   strMealThumb?: string;
-  strTags?: string;
+  strTags?: string[];
   strYoutube?: string;
   ingredients: string[];
-  measures: string[];  
+  measures: string[];
   strSource?: string;
   dateModified?: string;
 }

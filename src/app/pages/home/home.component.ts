@@ -39,8 +39,13 @@ export class HomeComponent implements OnInit {
   };
 
   ngOnInit(): void {
-   this.fetchMealsByCategory();
+    this.fetchMealsByCategory();
   }
+  getImageUrl(thumb: string | undefined): string {
+    if (!thumb) return '';
+    return thumb.startsWith('http') ? thumb : 'http://127.0.0.1:8000' + thumb;
+  }
+
 
   fetchMealsByCategory(): void {
     this.mealsLoading.set(true);

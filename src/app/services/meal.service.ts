@@ -21,12 +21,19 @@ export class MealService {
     return this.http.get<Meal>(`${this.url}/meals/${id}`);
   }
 
-  createMeal(meal: Meal): Observable<any> {
-    return this.http.post(`${this.url}/meals`, meal);
+  createMeal(meal: FormData | Meal): Observable<any> {
+    // When using FormData, don't set Content-Type header - let browser set it automatically
+    if (meal instanceof FormData) {
+      return this.http.post(`${this.url}/meals`, meal);
+    } else {
+      // For regular object data (if you still need this functionality)
+      return this.http.post(`${this.url}/meals`, meal);
+    }
   }
 
   searchMeals(query: string): Observable<Meal[]> {
     return this.http
       .get<{ meals: Meal[] }>(`${this.url}/meals/search?q=${query}`)
       .pipe(map((res) => res.meals || []));
-  }}
+  }
+}

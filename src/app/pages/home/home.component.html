@@ -17,7 +17,7 @@
     <div class="meals-grid" *ngIf="!mealsLoading() && meals().length > 0">
       <div *ngFor="let meal of meals()" class="meal-card">
         <a [routerLink]="['/meal', meal.id]">
-          <img [src]="meal.strMealThumb" [alt]="meal.strMeal" class="meal-image" />
+          <img [src]="getImageUrl(meal.strMealThumb)" [alt]="meal.strMeal" class="meal-image" />
           <h4 class="meal-title">{{ meal.strMeal }}</h4>
         </a>
       </div>

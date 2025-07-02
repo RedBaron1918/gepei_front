@@ -61,6 +61,12 @@ this.extractIngredients(mealData);
   });
   
 }
+
+  getImageUrl(thumb: string | undefined): string {
+    if (!thumb) return '';
+    return thumb.startsWith('http') ? thumb : 'http://127.0.0.1:8000' + thumb;
+  }
+  
 private extractIngredients(meal: Meal): void {
   const ingredients: Ingredient[] = [];
 

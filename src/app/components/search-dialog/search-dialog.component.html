@@ -1,22 +1,15 @@
 <div class="search-dialog">
   <div class="search-header">
     <mat-icon>search</mat-icon>
-    <input
-      #searchInput
-      type="text"
-      [(ngModel)]="searchQuery"
-      (keyup.enter)="search()"
-      placeholder="Search meals..."
-      class="search-input"
-      autofocus
-    />
+    <input #searchInput type="text" [(ngModel)]="searchQuery" (keyup.enter)="search()" placeholder="Search meals..."
+      class="search-input" autofocus />
     <button (click)="close()" class="close-button">
       <mat-icon>close</mat-icon>
     </button>
   </div>
   <div class="search-results" *ngIf="results.length">
     <div *ngFor="let meal of results" class="search-result-item" (click)="selectMeal(meal)">
-      <img [src]="meal.strMealThumb" [alt]="meal.strMeal" class="result-thumb"/>
+      <img [src]="getImageUrl(meal.strMealThumb)" [alt]="meal.strMeal" class="result-thumb" />
       <span class="result-name">{{meal.strMeal}}</span>
     </div>
   </div>

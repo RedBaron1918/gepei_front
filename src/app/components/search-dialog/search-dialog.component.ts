@@ -43,7 +43,7 @@ export class SearchDialogComponent {
   constructor(
     public dialogRef: MatDialogRef<SearchDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any
-  ) {}
+  ) { }
 
   ngAfterViewInit() {
     setTimeout(() => {
@@ -77,6 +77,10 @@ export class SearchDialogComponent {
     console.log('Selected meal:', meal);
     this.dialogRef.close();
     void this.router.navigate(['/meal', meal.id]);
+  }
+  getImageUrl(thumb: string | undefined): string {
+    if (!thumb) return '';
+    return thumb.startsWith('http') ? thumb : 'http://127.0.0.1:8000' + thumb;
   }
 
   close() {

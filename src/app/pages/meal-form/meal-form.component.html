@@ -1,7 +1,33 @@
 <form [formGroup]="mealForm" (ngSubmit)="submit()">
+  <!-- Error Modal -->
+  <div *ngIf="showErrorModal" class="modal-overlay" (click)="closeErrorModal()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h3>Validation Errors</h3>
+        <button type="button" class="close-btn" (click)="closeErrorModal()">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p class="error-message">{{ errorMessage }}</p>
+        <ul *ngIf="getErrorMessages().length > 0" class="error-list">
+          <li *ngFor="let error of getErrorMessages()" class="error-item">
+            {{ error }}
+          </li>
+        </ul>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" (click)="closeErrorModal()">
+          Close
+        </button>
+      </div>
+    </div>
+  </div>
+
   <label>
     Meal Name:
     <input formControlName="strMeal" />
+    <div *ngIf="mealForm.get('strMeal')?.invalid && mealForm.get('strMeal')?.touched" class="error">
+      Meal name is required
+    </div>
   </label>
 
   <label>
@@ -12,6 +38,9 @@
         {{ category.strCategory }}
       </option>
     </select>
+    <div *ngIf="mealForm.get('strCategory')?.invalid && mealForm.get('strCategory')?.touched" class="error">
+      Category is required
+    </div>
   </label>
 
   <label>
@@ -24,14 +53,24 @@
     <textarea formControlName="strInstructions"></textarea>
   </label>
 
+  <!-- File Upload Section -->
   <label>
-    Image URL:
-    <input formControlName="strMealThumb" />
+    Meal Image:
+    <input type="file" id="imageFile" accept="image/jpeg,image/png,image/jpg,image/gif"
+      (change)="onFileSelected($event)" class="file-input" />
   </label>
+
+  <!-- Image Preview -->
+  <div *ngIf="imagePreview" class="image-preview-container">
+    <img [src]="imagePreview" alt="Preview" class="image-preview" />
+    <button type="button" (click)="removeImage()" class="remove-image-btn">
+      Remove Image
+    </button>
+  </div>
 
   <label>
     Tags (comma separated):
-    <input formControlName="strTags" />
+    <input formControlName="tags" />
   </label>
 
   <label>
@@ -46,14 +85,13 @@
 
   <h3>Ingredients & Measures</h3>
   <div formArrayName="ingredients">
-    <div *ngFor="let ingredient of ingredients.controls; let i = index">
+    <div *ngFor="let ingredient of ingredients.controls; let i = index" class="ingredient-row">
       <input [formControlName]="i" placeholder="Ingredient" />
       <input [formControl]="getMeasureControl(i)" placeholder="Measure" />
       <button type="button" (click)="removeIngredient(i)">Remove</button>
     </div>
   </div>
-
   <button type="button" (click)="addIngredient()">Add Ingredient</button>
 
-  <button type="submit">Create Meal</button>
+  <button type="submit" [disabled]="mealForm.invalid">Create Meal</button>
 </form>

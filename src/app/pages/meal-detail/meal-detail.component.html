@@ -6,7 +6,7 @@
     <div *ngIf="!loading() && meal()" class="meal-detail-content">
       <header class="meal-header">
         <div class="meal-image-container">
-          <img [src]="meal()?.strMealThumb" [alt]="meal()?.strMeal" class="meal-image" />
+          <img [src]="getImageUrl(meal()?.strMealThumb)" [alt]="meal()?.strMeal" class="meal-image" />
         </div>
         
         <div class="meal-info">
@@ -14,9 +14,10 @@
           <div class="meal-metadata">
             <span class="tag">{{ meal()?.strCategory }}</span>
             <span class="tag">{{ meal()?.strArea }}</span>
-            <span *ngIf="meal()?.strTags" class="tag">
-              {{ meal()?.strTags }}
-            </span>
+              <span *ngFor="let tag of meal()?.strTags" class="tag">
+                {{ tag }}
+              </span>
+
           </div>
         </div>
       </header>
