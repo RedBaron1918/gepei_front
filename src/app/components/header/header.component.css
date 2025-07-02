@@ -8,27 +8,27 @@
   top: 0;
   z-index: 1000;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  position: relative; 
+  position: relative;
 }
 
 
-    .nav-brand {
-      display: flex;
-      align-items: center;
-      gap: 16px;
-    }
+.nav-brand {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
 
-    .logo {
-      height: 32px;
-    }
+.logo {
+  height: 32px;
+}
 
-    .menu-toggle {
-      display: none;
-      background: none;
-      border: none;
-      cursor: pointer;
-      padding: 8px;
-    }
+.menu-toggle {
+  display: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+}
 
 .nav-links {
   display: flex;
@@ -39,63 +39,106 @@
 }
 
 
-    .nav-button {
-      border: none;
-      padding: 10px;
-      background-color: transparent;
-      cursor: pointer;
-      font-size: 15px;
-      position: relative;
-    }
+.nav-button {
+  border: none;
+  padding: 10px;
+  background-color: transparent;
+  cursor: pointer;
+  font-size: 15px;
+  position: relative;
+}
 
-    .nav-button:hover {
-      color: rgba(0, 0, 0, 0.7);
-    }
+.nav-button:hover {
+  color: rgba(0, 0, 0, 0.7);
+}
 
-    .nav-button.active::after {
-      content: '';
-      position: absolute;
-      bottom: 0;
-      left: 10px;
-      right: 10px;
-      height: 2px;
-      background-color: currentColor;
-    }
+.nav-button.active::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 10px;
+  right: 10px;
+  height: 2px;
+  background-color: currentColor;
+}
 
-    .nav-buttons {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
+.nav-buttons {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
 
-    @media (max-width: 768px) {
-      .nav {
-        padding: 16px 20px;
-      }
+@media (max-width: 768px) {
+  .nav {
+    padding: 16px 20px;
+  }
 
-      .menu-toggle {
-        display: block;
-      }
+  .menu-toggle {
+    display: block;
+  }
 
-      .nav-links {
-        display: none;
+  .nav-links {
+    display: none;
     position: absolute;
     top: 100%;
     left: 0;
     right: 0;
-    transform: none; /* reset transform if needed */
+    transform: none;
+    /* reset transform if needed */
     flex-direction: column;
     background-color: rgba(245, 245, 245, 0.95);
     padding: 16px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-      }
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
 
-      .nav-links.active {
-        display: flex;
-      }
+  .nav-links.active {
+    display: flex;
+  }
 
-      .nav-buttons {
-        gap: 8px;
-      }
-    }
-    
+  .nav-buttons {
+    gap: 8px;
+  }
+}
+
+.user-dropdown {
+  position: relative;
+}
+
+.user-button {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 8px 12px;
+  background: transparent;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.user-button:hover {
+  background-color: #f5f5f5;
+}
+
+.user-button span {
+  font-weight: 500;
+}
+
+.user-button mat-icon {
+  font-size: 18px;
+  width: 18px;
+  height: 18px;
+}
+
+/* Optional: Style the menu items */
+.mat-menu-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.mat-menu-item mat-icon {
+  font-size: 18px;
+  width: 18px;
+  height: 18px;
+}

@@ -10,6 +10,8 @@ import {
   WritableSignal,
 } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatButtonModule } from '@angular/material/button';
 import { MaterialButtonComponent } from '../material-button/material-button.component';
 import { Route, RouterLink, RouterLinkActive } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
@@ -31,6 +33,9 @@ interface User {
     MaterialButtonComponent,
     RouterLink,
     RouterLinkActive,
+    MatMenuModule,
+    MatButtonModule,
+    MatIconModule,
   ],
   templateUrl: './header.component.html',
   styleUrl: './header.component.css',
@@ -65,14 +70,14 @@ export class HeaderComponent implements OnInit {
     this.isMenuOpen.update((value) => !value);
   }
 
-  handleClick(event: MouseEvent) {}
+  handleClick(event: MouseEvent) { }
 
   openDialog() {
     const dialogRef = this.dialog.open(SearchDialogComponent, {
       width: '800px',
     });
 
-    dialogRef.afterClosed().subscribe((result) => {});
+    dialogRef.afterClosed().subscribe((result) => { });
   }
 
 

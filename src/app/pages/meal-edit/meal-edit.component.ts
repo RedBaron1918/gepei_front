@@ -1,27 +1,31 @@
 import { Component, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { MealService } from '../../services/meal.service';
-import { CategoryService, } from '../../services/category.service';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { ReactiveFormsModule } from '@angular/forms';
-import { BrowserModule } from '@angular/platform-browser';
 import { CommonModule } from '@angular/common';
+import { MealService } from '../../services/meal.service';
+import { CategoryService } from '../../services/category.service';
 import { Category } from '../../models/category';
+import { Meal } from '../../models/meal';
 
 @Component({
-  selector: 'app-meal-form',
-  templateUrl: 'meal-form.component.html',
-  styleUrl: 'meal-form.component.css',
+  selector: 'app-meal-edit',
+  templateUrl: './meal-edit.component.html',
+  styleUrl: './meal-edit.component.css',
   standalone: true,
   imports: [
     CommonModule,
     ReactiveFormsModule,
   ]
 })
-export class MealFormComponent implements OnInit {
+export class MealEditComponent implements OnInit {
   mealForm: FormGroup;
   categories: Category[] = [];
   selectedFile: File | null = null;
   imagePreview: string | null = null;
+  mealId: string;
+  meal: Meal | null = null;
+  loading = false;
 
   // Error modal properties
   showErrorModal = false;
@@ -31,14 +35,17 @@ export class MealFormComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private mealService: MealService,
-    private categoryService: CategoryService
+    private categoryService: CategoryService,
+    private route: ActivatedRoute,
+    public router: Router
   ) {
+    this.mealId = this.route.snapshot.paramMap.get('id') || '';
     this.mealForm = this.fb.group({
-      strMeal: ['', Validators.required],
-      strCategory: ['', Validators.required],
+      strMeal: ['',],
+      strCategory: ['',],
       strArea: [''],
-      strInstructions: ['', Validators.required],
-      strMealThumb: ['',],
+      strInstructions: ['',],
+      strMealThumb: [''],
       tags: [''],
       strYoutube: [''],
       strSource: [''],
@@ -49,17 +56,70 @@ export class MealFormComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadCategories();
-    this.addIngredient();
+    this.loadMeal();
   }
 
   loadCategories(): void {
     this.categoryService.getCategories().subscribe({
       next: (data) => {
-        console.log(data);
-        this.categories = data
+        this.categories = data;
       },
       error: (err) => console.error('Failed to load categories', err)
     });
+  }
+
+  loadMeal(): void {
+    this.loading = true;
+    this.mealService.getMealDetails(this.mealId).subscribe({
+      next: (meal) => {
+        this.meal = meal;
+        this.populateForm(meal);
+        this.loading = false;
+      },
+      error: (err) => {
+        console.error('Failed to load meal', err);
+        this.loading = false;
+        this.router.navigate(['/user/meals']);
+      }
+    });
+  }
+
+  populateForm(meal: Meal): void {
+    this.mealForm.patchValue({
+      strMeal: meal.strMeal,
+      strCategory: meal.strCategory,
+      strArea: meal.strArea,
+      strInstructions: meal.strInstructions,
+      tags: Array.isArray(meal.strTags) ? meal.strTags.join(', ') : meal.strTags,
+      strYoutube: meal.strYoutube,
+      strSource: meal.strSource,
+    });
+
+    // Set image preview if exists
+    if (meal.strMealThumb) {
+      this.imagePreview = meal.strMealThumb;
+    }
+
+    // Populate ingredients and measures
+    if (meal.ingredients && meal.measures) {
+      const ingredientsArray = this.mealForm.get('ingredients') as FormArray;
+      const measuresArray = this.mealForm.get('measures') as FormArray;
+
+      // Clear existing controls
+      ingredientsArray.clear();
+      measuresArray.clear();
+
+      // Add ingredients and measures
+      meal.ingredients.forEach((ingredient, index) => {
+        ingredientsArray.push(this.fb.control(ingredient,));
+        measuresArray.push(this.fb.control(meal.measures[index] || '',));
+      });
+    }
+
+    // Add at least one ingredient row if none exist
+    if (this.ingredients.length === 0) {
+      this.addIngredient();
+    }
   }
 
   get ingredients(): FormArray {
@@ -71,8 +131,8 @@ export class MealFormComponent implements OnInit {
   }
 
   addIngredient(): void {
-    this.ingredients.push(this.fb.control('', Validators.required));
-    this.measures.push(this.fb.control('', Validators.required));
+    this.ingredients.push(this.fb.control('',));
+    this.measures.push(this.fb.control('',));
   }
 
   removeIngredient(index: number): void {
@@ -93,14 +153,12 @@ export class MealFormComponent implements OnInit {
       if (!allowedTypes.includes(this.selectedFile.type)) {
         alert('Please select a valid image file (JPEG, PNG, JPG, GIF)');
         this.selectedFile = null;
-        this.imagePreview = null;
         return;
       }
 
       if (this.selectedFile.size > 2 * 1024 * 1024) {
         alert('File size must be less than 2MB');
         this.selectedFile = null;
-        this.imagePreview = null;
         return;
       }
 
@@ -114,7 +172,7 @@ export class MealFormComponent implements OnInit {
 
   removeImage(): void {
     this.selectedFile = null;
-    this.imagePreview = null;
+    this.imagePreview = this.meal?.strMealThumb || null;
     const fileInput = document.getElementById('imageFile') as HTMLInputElement;
     if (fileInput) {
       fileInput.value = '';
@@ -140,15 +198,17 @@ export class MealFormComponent implements OnInit {
         formData.append('strMealThumb', this.selectedFile);
       }
 
-      this.mealService.createMeal(formData).subscribe({
+      // Add _method for Laravel to handle PUT request
+      formData.append('_method', 'PUT');
+
+      this.mealService.updateMeal(this.mealId, formData).subscribe({
         next: (response) => {
-          console.log('Meal created:', response);
-          this.mealForm.reset();
-          this.removeImage();
-          alert('Meal created successfully!');
+          console.log('Meal updated:', response);
+          alert('Meal updated successfully!');
+          this.router.navigate(['/user/meals']);
         },
         error: (err) => {
-          console.error('Error creating meal:', err);
+          console.error('Error updating meal:', err);
           this.showError(err);
         }
       });
@@ -158,7 +218,7 @@ export class MealFormComponent implements OnInit {
   }
 
   showError(error: any): void {
-    this.errorMessage = error.error?.message || 'An error occurred while creating the meal';
+    this.errorMessage = error.error?.message || 'An error occurred while updating the meal';
     this.errorDetails = error.error?.errors || {};
     this.showErrorModal = true;
   }

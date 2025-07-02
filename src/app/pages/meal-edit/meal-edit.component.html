@@ -1,0 +1,163 @@
+<div class="container">
+    <div class="header">
+        <h1>✨ Edit Meal</h1>
+        <p>Update your delicious recipe</p>
+    </div>
+
+    <div class="form-container">
+        <!-- Loading State -->
+        <div class="loading" *ngIf="loading">
+            Loading meal details...
+        </div>
+
+        <!-- Main Form -->
+        <form [formGroup]="mealForm" (ngSubmit)="submit()" *ngIf="!loading">
+
+            <!-- Basic Information -->
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="strMeal">Meal Name *</label>
+                    <input type="text" id="strMeal" formControlName="strMeal"
+                        [class.invalid]="mealForm.get('strMeal')?.invalid && mealForm.get('strMeal')?.touched"
+                        placeholder="Enter meal name">
+                    <span class="error-text"
+                        *ngIf="mealForm.get('strMeal')?.invalid && mealForm.get('strMeal')?.touched">
+                        Meal name is required
+                    </span>
+                </div>
+
+                <div class="form-group">
+                    <label for="strCategory">Category *</label>
+                    <select id="strCategory" formControlName="strCategory"
+                        [class.invalid]="mealForm.get('strCategory')?.invalid && mealForm.get('strCategory')?.touched">
+                        <option value="">Select a category</option>
+                        <option *ngFor="let category of categories" [value]="category.strCategory">
+                            {{category.strCategory}}
+                        </option>
+                    </select>
+                    <span class="error-text"
+                        *ngIf="mealForm.get('strCategory')?.invalid && mealForm.get('strCategory')?.touched">
+                        Category is required
+                    </span>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="strArea">Area/Cuisine</label>
+                    <input type="text" id="strArea" formControlName="strArea"
+                        placeholder="e.g., Italian, Chinese, Mexican">
+                </div>
+
+                <div class="form-group">
+                    <label for="tags">Tags</label>
+                    <input type="text" id="tags" formControlName="tags" placeholder="e.g., spicy, vegetarian, quick">
+                </div>
+            </div>
+
+            <!-- Instructions -->
+            <div class="form-group full-width">
+                <label for="strInstructions">Instructions *</label>
+                <textarea id="strInstructions" formControlName="strInstructions"
+                    [class.invalid]="mealForm.get('strInstructions')?.invalid && mealForm.get('strInstructions')?.touched"
+                    placeholder="Enter detailed cooking instructions..."></textarea>
+                <span class="error-text"
+                    *ngIf="mealForm.get('strInstructions')?.invalid && mealForm.get('strInstructions')?.touched">
+                    Instructions are required
+                </span>
+            </div>
+
+            <!-- Image Section -->
+            <div class="image-section">
+                <h3>🖼️ Meal Image</h3>
+                <div class="file-input-wrapper">
+                    <input type="file" id="imageFile" class="file-input" (change)="onFileSelected($event)"
+                        accept="image/*">
+                    <label for="imageFile" class="file-input-label">
+                        📷 Choose Image
+                    </label>
+                </div>
+
+                <div *ngIf="imagePreview">
+                    <img [src]="imagePreview" alt="Meal preview" class="image-preview">
+                    <button type="button" class="remove-image-btn" (click)="removeImage()">
+                        🗑️ Remove
+                    </button>
+                </div>
+            </div>
+
+            <!-- Ingredients Section -->
+            <div class="ingredients-section">
+                <h3>🥗 Ingredients & Measurements</h3>
+
+                <button type="button" class="add-ingredient-btn" (click)="addIngredient()">
+                    ➕ Add Ingredient
+                </button>
+
+                <div *ngFor="let ingredient of ingredients.controls; let i = index" class="ingredient-row">
+                    <div class="form-group">
+                        <label>Ingredient {{i + 1}} *</label>
+                        <input type="text" [formControlName]="i"
+                            [class.invalid]="ingredient.invalid && ingredient.touched"
+                            placeholder="e.g., Chicken breast">
+                        <span class="error-text" *ngIf="ingredient.invalid && ingredient.touched">
+                            Ingredient is required
+                        </span>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Measurement {{i + 1}} *</label>
+                        <input type="text" [formControl]="getMeasureControl(i)"
+                            [class.invalid]="getMeasureControl(i).invalid && getMeasureControl(i).touched"
+                            placeholder="e.g., 2 lbs, 1 cup">
+                        <span class="error-text" *ngIf="getMeasureControl(i).invalid && getMeasureControl(i).touched">
+                            Measurement is required
+                        </span>
+                    </div>
+
+                    <button type="button" class="remove-ingredient-btn" (click)="removeIngredient(i)"
+                        *ngIf="ingredients.length > 1">
+                        ❌
+                    </button>
+                </div>
+            </div>
+
+            <!-- Links Section -->
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="strYoutube">YouTube Link</label>
+                    <input type="url" id="strYoutube" formControlName="strYoutube"
+                        placeholder="https://youtube.com/watch?v=...">
+                </div>
+
+                <div class="form-group">
+                    <label for="strSource">Recipe Source</label>
+                    <input type="url" id="strSource" formControlName="strSource"
+                        placeholder="https://example.com/recipe">
+                </div>
+            </div>
+
+            <!-- Submit Section -->
+            <div class="submit-section">
+                <button type="button" class="cancel-btn" (click)="router.navigate(['/user/meals'])">
+                    Cancel
+                </button>
+                <button type="submit" class="submit-btn" [disabled]="!mealForm.valid">
+                    💾 Update Meal
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Error Modal -->
+<div class="modal-overlay" *ngIf="showErrorModal" (click)="closeErrorModal()">
+    <div class="modal" (click)="$event.stopPropagation()">
+        <h3>❌ Error</h3>
+        <p>{{errorMessage}}</p>
+        <ul *ngIf="getErrorMessages().length > 0">
+            <li *ngFor="let message of getErrorMessages()">• {{message}}</li>
+        </ul>
+        <button class="modal-close-btn" (click)="closeErrorModal()">Close</button>
+    </div>
+</div>

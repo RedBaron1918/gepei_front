@@ -1,0 +1,58 @@
+<div class="user-meals-container">
+    <div class="header">
+        <h2>My Meals</h2>
+        <a routerLink="/meals/create" class="btn btn-primary">Create New Meal</a>
+    </div>
+
+    <!-- Loading spinner -->
+    <div *ngIf="loading" class="loading">
+        Loading your meals...
+    </div>
+
+    <!-- No meals message -->
+    <div *ngIf="!loading && meals.length === 0" class="no-meals">
+        <h3>No meals found</h3>
+        <p>You haven't created any meals yet. <a routerLink="/meals/create">Create your first meal!</a></p>
+    </div>
+
+    <!-- Meals grid -->
+    <div *ngIf="!loading && meals.length > 0" class="meals-grid">
+        <div *ngFor="let meal of meals" class="meal-card">
+            <div class="meal-image">
+                <img [src]="meal.strMealThumb || 'assets/default-meal.jpg'" [alt]="meal.strMeal">
+            </div>
+            <div class="meal-content">
+                <h3>{{ meal.strMeal }}</h3>
+                <p class="meal-category">{{ meal.strCategory }}</p>
+                <p class="meal-area" *ngIf="meal.strArea">{{ meal.strArea }}</p>
+                <div class="meal-actions">
+                    <a [routerLink]="['/meals', meal.id]" class="btn btn-secondary">View</a>
+                    <a [routerLink]="['/meals', meal.id, 'edit']" class="btn btn-primary">Edit</a>
+                    <button (click)="confirmDelete(meal)" class="btn btn-danger">Delete</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Delete confirmation modal -->
+    <div *ngIf="showDeleteModal" class="modal-overlay" (click)="closeDeleteModal()">
+        <div class="modal-content" (click)="$event.stopPropagation()">
+            <div class="modal-header">
+                <h3>Confirm Delete</h3>
+                <button type="button" class="close-btn" (click)="closeDeleteModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to delete "{{ mealToDelete?.strMeal }}"?</p>
+                <p>This action cannot be undone.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" (click)="closeDeleteModal()">
+                    Cancel
+                </button>
+                <button type="button" class="btn btn-danger" (click)="deleteMeal()">
+                    Delete
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

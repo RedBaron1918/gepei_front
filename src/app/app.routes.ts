@@ -13,7 +13,22 @@ export const routes: Routes = [
         (m) => m.MealDetailComponent
       ),
   },
-   {
+  {
+    path: 'meals/:id/edit',
+    loadComponent: () =>
+      import('./pages/meal-edit/meal-edit.component').then(
+        (m) => m.MealEditComponent
+      ),
+  },
+  {
+    path: 'user/meals',
+    loadComponent: () =>
+      import('./pages/user-meals/user-meals.component').then(
+        (m) => m.UserMealsComponent
+      ),
+  },
+
+  {
     path: 'create',
     loadComponent: () =>
       import('./pages/meal-form/meal-form.component').then((m) => m.MealFormComponent),

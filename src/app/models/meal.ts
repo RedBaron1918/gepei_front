@@ -15,4 +15,5 @@ export interface Meal {
   measures: string[];
   strSource?: string;
   dateModified?: string;
+  user_id: number;
 }

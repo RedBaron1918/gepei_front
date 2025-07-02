@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { BehaviorSubject, map, Observable } from 'rxjs';
 import { Meal, Meals } from '../models/meal';
@@ -13,6 +13,15 @@ export class MealService {
   private searchResultsSubject = new BehaviorSubject<Meal[]>([]);
   searchResults$ = this.searchResultsSubject.asObservable();
 
+
+  private getAuthHeaders(): HttpHeaders {
+    const user = JSON.parse(localStorage.getItem('user') || '{}');
+    const token = user.token;
+    return new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+  }
+
   mealListByCategory(): Observable<Meals> {
     return this.http.get<Meals>(`${this.url}/meals`);
   }
@@ -22,18 +31,33 @@ export class MealService {
   }
 
   createMeal(meal: FormData | Meal): Observable<any> {
-    // When using FormData, don't set Content-Type header - let browser set it automatically
-    if (meal instanceof FormData) {
-      return this.http.post(`${this.url}/meals`, meal);
-    } else {
-      // For regular object data (if you still need this functionality)
-      return this.http.post(`${this.url}/meals`, meal);
-    }
+    return this.http.post(`${this.url}/meals`, meal, {
+      headers: this.getAuthHeaders()
+    });
   }
+
 
   searchMeals(query: string): Observable<Meal[]> {
     return this.http
       .get<{ meals: Meal[] }>(`${this.url}/meals/search?q=${query}`)
       .pipe(map((res) => res.meals || []));
   }
+  getUserMeals(): Observable<any> {
+    return this.http.get(`${this.url}/user/meals`, {
+      headers: this.getAuthHeaders()
+    });
+  }
+
+  updateMeal(id: string, formData: FormData): Observable<any> {
+    return this.http.post(`${this.url}/meals/${id}`, formData, {
+      headers: this.getAuthHeaders()
+    });
+  }
+
+  deleteMeal(id: number): Observable<any> {
+    return this.http.delete(`${this.url}/meals/${id}`, {
+      headers: this.getAuthHeaders()
+    });
+  }
+
 }
